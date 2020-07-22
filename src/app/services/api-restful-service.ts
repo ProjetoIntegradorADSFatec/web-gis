@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpHeaderResponse } from '@angular/common/htt
 import { Response } from '../entity/responses/response';
 import { Catalog } from '../entity/models/catalog';
 import { User } from '../entity/models/user';
-import { CustomResponse } from '../entity/models/custom-response';
 import { ResponseToken } from '../entity/models/response-token';
 import { Geojson } from '../entity/geojson/geojson';
 
@@ -17,26 +16,22 @@ export class ApiRestfulService {
     'Access-Control-Allow-Methods': 'GET, POST, DELETE'
   };
 
-  constructor(private httpClient: HttpClient) { }
+  private admin: boolean = false;
 
-  async signup(user: User) {
-    await this.httpClient.post<CustomResponse>('/users/sign-up', user, { headers: new HttpHeaders(this.httpOptions) }).toPromise().then(
-      (response: CustomResponse) => {
-        alert(response.description);
-      }
-    );
-  }
+  constructor(private httpClient: HttpClient) { }
 
   async login(user: User) {
     await this.httpClient.post<ResponseToken>('/login', user, { headers: new HttpHeaders(this.httpOptions) }).toPromise().then(
       (response: ResponseToken) => {
         this.httpOptions['token'] = response.token;
+        this.admin = response.user.role.includes(("role_admin").toUpperCase());
       }
     );
   }
 
   logout() {
     delete this.httpOptions['token'];
+    this.admin = false;
   }
 
   getCatalogList() {
@@ -53,6 +48,10 @@ export class ApiRestfulService {
 
   deleteCatalogItem(id: number) {
     return this.httpClient.delete<Catalog>('/catalog/remove?id=' + id.toString(), { headers: this.httpOptions });
+  }
+
+  isAdmin() {
+    return this.admin;
   }
 
   isValue(data: any): boolean {
