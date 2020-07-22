@@ -36,7 +36,7 @@
                     <li *ngFor="let feature of response.features">
                         <div class="card">
                             <div class="square">
-                                <div class="marker" *ngIf="userIsLoged()">
+                                <div class="marker" *ngIf="userIsAdmin()">
                                     <p-inputSwitch [(ngModel)]="downloadImage[feature.id]"></p-inputSwitch>
                                 </div>
                                 <a href = "{{ feature.assets[0].href }}">
@@ -74,7 +74,7 @@
                             <span>
                                 <button pButton type="button" class="button" (click)="search()" icon="pi pi-globe" label="Buscar Polígono"></button>
                             </span>
-                            <span>
+                            <span *ngIf="userIsAdmin()">
                                 <div *ngIf="thereIsImagesToDownload()" >
                                     <a href="http://www.dpi.inpe.br/obt/agricultural-database/lem/dados/cenas/Landsat8/LC08_20170615.zip">
                                         <button pButton type="button" class="button" (click)="download()" icon="pi pi-download" label="Download"></button>

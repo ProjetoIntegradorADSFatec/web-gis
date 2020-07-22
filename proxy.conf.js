@@ -5,7 +5,6 @@ const PROXY_CONFIG = [
           "/catalog/search",
           "/catalog/add",
           "/catalog/remove",
-          "/users/sign-up",
           "/login"
       ],
       target: "http://192.168.15.11:4040",

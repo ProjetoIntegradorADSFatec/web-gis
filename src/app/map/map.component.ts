@@ -122,6 +122,10 @@ export class MapComponent implements OnInit {
     return this.service.isValue(this.toStore.user);
   }
 
+  userIsAdmin(): boolean {
+    return this.service.isAdmin();
+  }
+
   // Configurações da busca
   async initItens() {
     await this.service.getCatalogList().toPromise().then(
