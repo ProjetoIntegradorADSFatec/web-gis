@@ -122,8 +122,8 @@ export class MapComponent implements OnInit {
     return this.service.isValue(this.toStore.user);
   }
 
-  userIsAdmin(): boolean {
-    return this.service.isAdmin();
+  hasRole(role: string): boolean {
+    return this.service.hasRole(role);
   }
 
   // Configurações da busca
@@ -238,7 +238,7 @@ export class MapComponent implements OnInit {
       };
       await this.service.postSearchRequest(request).toPromise().then(
         (data: Response) => {
-          this.response = data
+          this.response = data;
         }
       );
       this.storage.dispatch(Update(this.toStore));
