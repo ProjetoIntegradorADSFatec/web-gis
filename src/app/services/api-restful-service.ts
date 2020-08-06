@@ -16,7 +16,7 @@ export class ApiRestfulService {
     'Access-Control-Allow-Methods': 'GET, POST, DELETE'
   };
 
-  private admin: boolean = false;
+  private permissions: string[] = [];
 
   constructor(private httpClient: HttpClient) { }
 
@@ -24,14 +24,9 @@ export class ApiRestfulService {
     await this.httpClient.post<ResponseToken>('/login', user, { headers: new HttpHeaders(this.httpOptions) }).toPromise().then(
       (response: ResponseToken) => {
         this.httpOptions['token'] = response.token;
-        this.admin = response.user.role.includes(("role_admin").toUpperCase());
+        this.permissions = response.user.role;
       }
     );
-  }
-
-  logout() {
-    delete this.httpOptions['token'];
-    this.admin = false;
   }
 
   getCatalogList() {
@@ -50,8 +45,12 @@ export class ApiRestfulService {
     return this.httpClient.delete<Catalog>('/catalog/remove?id=' + id.toString(), { headers: this.httpOptions });
   }
 
-  isAdmin() {
-    return this.admin;
+  hasRole(role: string): boolean {
+    return this.permissions.includes(role);
+  }
+
+  logout() {
+    delete this.httpOptions['token'];
   }
 
   isValue(data: any): boolean {
